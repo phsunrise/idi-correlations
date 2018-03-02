@@ -1,9 +1,10 @@
 import numpy as np
 
-def outgoingqs(geometry):
+def outgoingks(geometry):
     '''
     generates the outgoing wavevectors for plane waves
     scattered into the detector
+    note that here K = k_out, not k_out - k_in
     '''
     det_size_horz = geometry['det_size_horz']
     det_size_vert = geometry['det_size_vert']
@@ -36,10 +37,10 @@ def outgoingqs(geometry):
     Ymesh, Zmesh = np.meshgrid(Y,Z)
     Deno = np.sqrt(Zmesh**2 + Ymesh**2 + D**2)
 
-    Q = np.zeros((image_Nz, image_Ny, 3))
+    K = np.zeros((image_Nz, image_Ny, 3))
 
-    Q[:,:,0] = k_0 * (D / Deno)
-    Q[:,:,1] = k_0 * (- Ymesh / Deno)   # RIGHT of image is Y < 0 in the lab frame
-    Q[:,:,2] = k_0*(- Zmesh / Deno) # positive Z is up, but detector local "Z" increases downwards
+    K[:,:,0] = k_0 * (D / Deno)
+    K[:,:,1] = k_0 * (- Ymesh / Deno)   # RIGHT of image is Y < 0 in the lab frame
+    K[:,:,2] = k_0*(- Zmesh / Deno) # positive Z is up, but detector local "Z" increases downwards
 
-    return Q
+    return K
