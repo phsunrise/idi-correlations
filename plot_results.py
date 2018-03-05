@@ -8,14 +8,22 @@ datadir = basedir + "noncrys/"
 
 do_readfile = False
 filename = "g2_average.npy" # default filename
+MaxFile = np.iinfo(np.int32).max # default maximum number of files
 
-opts, args = getopt(sys.argv[1:], "r:s:")
+opts, args = getopt(sys.argv[1:], "r:s:n:h")
 for o, a in opts:
-    if o == '-r':
+    if o == '-r': # read certain file
         filename = a
         do_readfile = True
-    elif o == '-s':
+    elif o == '-s': # save as certain file
         filename = a
+    elif o == '-n': # maximum number of files
+        MaxFile = int(a)
+    elif o == '-h': # help message
+        print "Options:"
+        print "-r [filename]: read from file"
+        print "-s [filename]: save as file"
+        print "-n [number N]: read at most N files"
 
 Q = np.load(datadir + "Q.npy")
 Qnorm = np.sqrt(np.sum(Q**2, axis=0))
@@ -34,7 +42,7 @@ if do_readfile:
 else:
     i_f = 0
     g2 = np.zeros((N, N))
-    while os.path.isfile(datadir + "g2_%04d.npy" % i_f):
+    while os.path.isfile(datadir + "g2_%04d.npy" % i_f) and i_f < MaxFile:
         g2 += np.load(datadir + "g2_%04d.npy" % i_f)
         i_f += 1 
         if i_f % 100 == 0:
