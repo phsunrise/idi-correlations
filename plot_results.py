@@ -49,6 +49,14 @@ print "# pixels = %d" % (g2.shape[0])
 plt.figure()
 plt.scatter(Qperp.ravel(), g2.ravel())
 
-plt.figure()
-plt.plot(g2.ravel())
+binned, bin_edges = np.histogram(Qperp.ravel(), \
+                        bins=100, weights=g2.ravel())
+counts, bin_edges = np.histogram(Qperp.ravel(), \
+                        bins=100)
+xx = 0.5*(bin_edges[:-1] + bin_edges[1:])
+yy = 1.*binned / counts
+plt.plot(xx, yy, 'r-')
+
+#plt.figure()
+#plt.plot(g2.ravel())
 plt.show()
