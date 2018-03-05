@@ -5,6 +5,7 @@ def outgoingks(geometry):
     generates the outgoing wavevectors for plane waves
     scattered into the detector
     note that here K = k_out, not k_out - k_in
+    Also note that z in in the beam direction
     '''
     det_size_horz = geometry['det_size_horz']
     det_size_vert = geometry['det_size_vert']
@@ -39,8 +40,8 @@ def outgoingks(geometry):
 
     K = np.zeros((image_Nz, image_Ny, 3))
 
-    K[:,:,0] = k_0 * (D / Deno)
-    K[:,:,1] = k_0 * (- Ymesh / Deno)   # RIGHT of image is Y < 0 in the lab frame
-    K[:,:,2] = k_0*(- Zmesh / Deno) # positive Z is up, but detector local "Z" increases downwards
+    K[:,:,0] = k_0 * (- Ymesh / Deno)   # RIGHT of image is Y < 0 in the lab frame
+    K[:,:,1] = k_0*(- Zmesh / Deno) # positive Z is up, but detector local "Z" increases downwards
+    K[:,:,2] = k_0 * (D / Deno)
 
     return K

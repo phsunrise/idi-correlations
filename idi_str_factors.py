@@ -46,11 +46,12 @@ def calc_positions(positions_inside, x, y, z, psi, phi, theta):
 def idi_str_factors_noncrys(Q, dim = '2D'):
     N = 100 # number of particles
 
-    # define particle: star-shaped, bond length = 3 angstrom
+    # define particle: star-shaped 
     positions = [[0., 0., 0.]]
+    bl = 6. # bond length in angstrom
     for i in range(5):
-        positions.append([3.*np.cos(i*2.*np.pi/5.), \
-                          3.*np.sin(i*2.*np.pi/5.), 0.])
+        positions.append([bl*np.cos(i*2.*np.pi/5.), \
+                          bl*np.sin(i*2.*np.pi/5.), 0.])
     positions = np.array(positions).T
 
     box_size = np.array([1000., 1000., 1000.]) # angstrom, in [x,y,z] directions
@@ -67,15 +68,15 @@ def idi_str_factors_noncrys(Q, dim = '2D'):
     # calculate atom positions
     # rs[0], rs[1], rs[2] are x,y,z coordinates of the atoms
     rs = calc_positions(positions, \
-            coords[i_p, 0], coords[i_p, 1], coords[i_p, 2], \
-            angles[i_p, 0], angles[i_p, 1], angles[i_p, 2])
+            coords[0, 0], coords[0, 1], coords[0, 2], \
+            angles[0, 0], angles[0, 1], angles[0, 2])
     for i_p in range(N-1):
         rs = np.hstack((rs, \
                 calc_positions(positions, \
                 coords[i_p, 0], coords[i_p, 1], coords[i_p, 2], \
                 angles[i_p, 0], angles[i_p, 1], angles[i_p, 2])))
 
-    rndphases = 2.*np.pi*np.random.random_sample((N,))
+    rndphases = 2.*np.pi*np.random.random_sample((N*6,))
 
     ## compute S(Q)
     fhkl = np.sum(np.exp(1.j * (Q.dot(rs) + rndphases)), \

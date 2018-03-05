@@ -38,12 +38,12 @@ datadir = basedir + "noncrys/"
 np.save(datadir + "Q.npy", Q)
 
 ## ensemble average
-N_e = 1000 # number of exposures 
+N_e = 5000 # number of exposures 
 N0_e = 10 # average over every N0_e exposures
 for i_f in range(N_e/N0_e):
     g2avg = np.zeros((N_pix, N_pix))
     for i_e in range(N0_e):
-        fhkl = idi_str_factors_noncrys(K)
+        fhkl = idi_str_factors_noncrys(K, dim = '2D')
         Ihkl_flat = np.abs(fhkl.reshape(N_pix, 1))**2
         g2avg = g2avg + Ihkl_flat.dot(Ihkl_flat.T)
     g2avg = 1.*g2avg / N0_e
