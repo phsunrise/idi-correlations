@@ -52,8 +52,8 @@ if i_f_start == 0: # only save Q for the first processor
     np.save(datadir + "Q.npy", Q)
 
 ## ensemble average
-N_e = 1000 # number of exposures 
-N0_e = 10 # average over every N0_e exposures
+N_e = 10000 # number of exposures 
+N0_e = 100 # average over every N0_e exposures
 for i_f in range(N_e/N0_e):
     G2avg = np.zeros((N_pix, N_pix))
     for i_e in range(N0_e):

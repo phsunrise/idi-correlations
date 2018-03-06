@@ -24,8 +24,8 @@ def Sq_iso_2D(q):
     else:
         rho0_term = 594. * mask
 
-    Sq = 10./6. * jn(0, 6.*q) + 10./6. * jn(0, a*q) + \
-         10./6. * jn(0, b*q) + rho0_term 
+    Sq = (10./6. * jn(0, 6.*q) + 10./6. * jn(0, a*q) + \
+         10./6. * jn(0, b*q) + rho0_term) * 599. + 1.
 
     if is_array:
         return Sq

@@ -15,7 +15,7 @@ N_pix = len(Qnorm)
 
 # get G2(Q=0)
 mask = np.eye(N_pix).astype(bool)
-G2 = np.load(datadir + "G2_average_5000.npy")
+G2 = np.load(datadir + "G2_average_500.npy")
 G20 = np.sum(G2[mask]) * (1./N_pix)
 
 Nbins = 100
@@ -26,13 +26,23 @@ for num in nums:
                             bins=Nbins, weights=g2.ravel())
     counts, bin_edges = np.histogram(Qperp.ravel(), \
                             bins=Nbins)
-    xx = 0.5*(bin_edges[:-1] + bin_edges[1:])
-    yy = 1.*binned / counts
-    plt.plot(xx, yy, '-', label=num)
+    xx = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+    yy = 1. * binned / counts
+    if num == '500':
+        yy_all = yy
+    num_shots = 100 * int(num)
+    plt.plot(xx, yy, '-', label=str(num_shots))
 
-yy = (Sq_iso_2D(xx) / Sq_iso_2D(0.)) ** 2
+yy = 0.5 * (1. + Sq_iso_2D(xx) / Sq_iso_2D(0.))
+add = np.mean((yy_all - yy)[1:-1])
+print "offset = ", add
+yy = yy + add
 plt.plot(xx, yy, '-', label=r"$\infty$")
 
-plt.ylim(0.48, 0.52)
+plt.ylim(0.495, 0.510)
 plt.legend()
+
+plt.figure()
+plt.plot(xx[1:-1], (yy-yy_all)[1:-1])
+
 plt.show()
