@@ -1,5 +1,4 @@
 import numpy as np
-np.random.seed(0)
 
 '''
 function to calculate S(Q)

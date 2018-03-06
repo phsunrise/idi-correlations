@@ -6,6 +6,18 @@ import matplotlib.pyplot as plt
 from outgoingks import outgoingks
 from idi_str_factors import idi_str_factors_crys, idi_str_factors_noncrys
 from settings import basedir 
+from getopt import getopt
+import os, sys
+
+i_f_start = 0
+opts, args = getopt(sys.argv[1:], "s:h")
+for o, a in opts:
+    if o == '-s': # start saving from certain number
+        i_f_start = int(a)
+    elif o == '-h':
+        print "Options:"
+        print "-s [START NUM]: start saving from START NUM"
+        sys.exit(0)
 
 ## setup
 geometry = {}
@@ -35,17 +47,19 @@ for i in range(3):
 Q = np.array(Q)
 
 datadir = basedir + "noncrys/"
-np.save(datadir + "Q.npy", Q)
+
+if i_f_start == 0: # only save Q for the first processor
+    np.save(datadir + "Q.npy", Q)
 
 ## ensemble average
-N_e = 5000 # number of exposures 
+N_e = 1000 # number of exposures 
 N0_e = 10 # average over every N0_e exposures
 for i_f in range(N_e/N0_e):
-    g2avg = np.zeros((N_pix, N_pix))
+    G2avg = np.zeros((N_pix, N_pix))
     for i_e in range(N0_e):
         fhkl = idi_str_factors_noncrys(K, dim = '2D')
         Ihkl_flat = np.abs(fhkl.reshape(N_pix, 1))**2
-        g2avg = g2avg + Ihkl_flat.dot(Ihkl_flat.T)
-    g2avg = 1.*g2avg / N0_e
-    np.save(datadir + "g2_%04d.npy" % (i_f), g2avg)
+        G2avg = G2avg + Ihkl_flat.dot(Ihkl_flat.T)
+    G2avg = 1.*G2avg / N0_e
+    np.save(datadir + "G2_%04d.npy" % (i_f + i_f_start), G2avg)
     print "done %d/%d" % (i_f+1, N_e/N0_e)
