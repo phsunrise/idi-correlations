@@ -9,14 +9,17 @@ from settings import basedir
 from getopt import getopt
 import os, sys
 
-i_f_start = 0
-opts, args = getopt(sys.argv[1:], "s:h")
+do_filelist = False
+filelist = np.arange(100).astype(int)
+opts, args = getopt(sys.argv[1:], "f:h")
 for o, a in opts:
-    if o == '-s': # start saving from certain number
-        i_f_start = int(a)
+    if o == '-f': # read filelist
+        do_filelist = True
+        filelist = np.load(a)
     elif o == '-h':
         print "Options:"
         print "-s [START NUM]: start saving from START NUM"
+        print "-f [FILELIST]: read file list from file FILELIST"
         sys.exit(0)
 
 ## setup
@@ -52,14 +55,13 @@ if i_f_start == 0: # only save Q for the first processor
     np.save(datadir + "Q.npy", Q)
 
 ## ensemble average
-N_e = 10000 # number of exposures 
 N0_e = 100 # average over every N0_e exposures
-for i_f in range(N_e/N0_e):
+for i_f in filelist:
     G2avg = np.zeros((N_pix, N_pix))
     for i_e in range(N0_e):
         fhkl = idi_str_factors_noncrys(K, dim = '2D')
         Ihkl_flat = np.abs(fhkl.reshape(N_pix, 1))**2
         G2avg = G2avg + Ihkl_flat.dot(Ihkl_flat.T)
     G2avg = 1.*G2avg / N0_e
-    np.save(datadir + "G2_%04d.npy" % (i_f + i_f_start), G2avg)
-    print "done %d/%d" % (i_f+1, N_e/N0_e)
+    np.save(datadir + "G2_%04d.npy" % (i_f), G2avg)
+    print "done %d/%d" % (i_f+1, len(filelist))
