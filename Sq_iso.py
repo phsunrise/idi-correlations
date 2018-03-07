@@ -6,6 +6,8 @@ now implementing 2D case only
 see writeup for details
 '''
 
+N = 100
+
 def Sq_iso_2D(q):
     if isinstance(q, np.ndarray):
         is_array = True
@@ -19,13 +21,13 @@ def Sq_iso_2D(q):
 
     mask = q < 1.e-10
     if np.sum(~mask):
-        rho0_term = 594. * (2./L/q[~mask]*np.sin(L/2.*q[~mask]))**2 + \
-                    594. * mask
+        rho0_term = 6.*(N-1.) * (2./L/q[~mask]*np.sin(L/2.*q[~mask]))**2 + \
+                    6.*(N-1.) * mask
     else:
-        rho0_term = 594. * mask
+        rho0_term = 6.*(N-1.) * mask
 
     Sq = (10./6. * jn(0, 6.*q) + 10./6. * jn(0, a*q) + \
-         10./6. * jn(0, b*q) + rho0_term) * 599. + 1.
+         10./6. * jn(0, b*q) + rho0_term) * (N-1.) + 1.
 
     if is_array:
         return Sq

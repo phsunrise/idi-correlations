@@ -12,4 +12,14 @@ for i in range(total):
         filelist.append(i)
 
 print filelist
-print "total %d files" % len(filelist)
+
+n = len(filelist)
+print "total %d files" % n
+
+nprocs = int(raw_input("number of processors: "))
+sublists = [[] for i in range(nprocs)]
+for i_f, f in enumerate(filelist):
+    sublists[i_f % nprocs].append(f)
+
+for i in range(nprocs):
+    np.save("filelist_%03d.npy"%i, np.array(sublists[i]).astype(int))

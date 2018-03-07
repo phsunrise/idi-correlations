@@ -43,7 +43,7 @@ def calc_positions(positions_inside, x, y, z, psi, phi, theta):
 
 
 def idi_str_factors_noncrys(Q, dim = '2D'):
-    N = 100 # number of particles
+    N = 10 # number of particles
 
     # define particle: star-shaped 
     positions = [[0., 0., 0.]]

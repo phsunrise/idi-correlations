@@ -4,7 +4,8 @@ from settings import basedir
 import os, sys
 from Sq_iso import Sq_iso_2D
 
-datadir = basedir + "noncrys/"
+datadir = basedir + "noncrys/2D_N_100/"
+#datadir = basedir + "noncrys/"
 
 nums = sys.argv[1:]
 
@@ -15,7 +16,7 @@ N_pix = len(Qnorm)
 
 # get G2(Q=0)
 mask = np.eye(N_pix).astype(bool)
-G2 = np.load(datadir + "G2_average_500.npy")
+G2 = np.load(datadir + "G2_average_5000.npy")
 G20 = np.sum(G2[mask]) * (1./N_pix)
 
 Nbins = 100
@@ -28,7 +29,7 @@ for num in nums:
                             bins=Nbins)
     xx = 0.5 * (bin_edges[:-1] + bin_edges[1:])
     yy = 1. * binned / counts
-    if num == '500':
+    if num == '5000':
         yy_all = yy
     num_shots = 100 * int(num)
     plt.plot(xx, yy, '-', label=str(num_shots))
@@ -39,7 +40,7 @@ print "offset = ", add
 yy = yy + add
 plt.plot(xx, yy, '-', label=r"$\infty$")
 
-plt.ylim(0.495, 0.510)
+plt.ylim(0.49, 0.520)
 plt.legend()
 
 plt.figure()
