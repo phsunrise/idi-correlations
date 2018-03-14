@@ -42,9 +42,11 @@ def calc_positions(positions_inside, x, y, z, psi, phi, theta):
     return rot.dot(positions_inside) + np.array([[x], [y], [z]]) 
 
 
-def idi_str_factors_noncrys(Q, dim = '2D'):
-    N = 10 # number of particles
-
+def idi_str_factors_noncrys(Q, dim='2D', N=10, do_CDI=False):
+    '''
+    N = number of particles (not atoms)
+    If do_CDI = True, don't do random phases
+    '''
     # define particle: star-shaped 
     positions = [[0., 0., 0.]]
     bl = 6. # bond length in angstrom
@@ -53,7 +55,8 @@ def idi_str_factors_noncrys(Q, dim = '2D'):
                           bl*np.sin(i*2.*np.pi/5.), 0.])
     positions = np.array(positions).T
 
-    box_size = np.array([1000., 1000., 1000.]) # angstrom, in [x,y,z] directions
+    #box_size = np.array([1000., 1000., 1000.]) # angstrom, in [x,y,z] directions
+    box_size = np.array([100., 100., 100.]) # angstrom, in [x,y,z] directions
     # the box is centered at the origin
 
     # initialize particles 
@@ -75,10 +78,21 @@ def idi_str_factors_noncrys(Q, dim = '2D'):
                 coords[i_p, 0], coords[i_p, 1], coords[i_p, 2], \
                 angles[i_p, 0], angles[i_p, 1], angles[i_p, 2])))
 
-    rndphases = 2.*np.pi*np.random.random_sample((N*6,))
+    #import matplotlib.pyplot as plt
+    #from mpl_toolkits.mplot3d import Axes3D
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111, projection='3d')
+    #ax.scatter(rs[0], rs[1], rs[2])
+    #ax.set_aspect('equal')
+    #plt.show()
 
-    ## compute S(Q)
-    fhkl = np.sum(np.exp(1.j * (Q.dot(rs) + rndphases)), \
-                  axis=2)
+    if not do_CDI:
+        rndphases = 2.*np.pi*np.random.random_sample((N*6,))
+
+        ## compute S(Q)
+        fhkl = np.sum(np.exp(1.j * (Q.dot(rs) + rndphases)), \
+                      axis=-1)
+    else:
+        fhkl = np.sum(np.exp(1.j * Q.dot(rs)), axis=-1)
 
     return fhkl
