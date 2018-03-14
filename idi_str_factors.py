@@ -15,7 +15,7 @@ def idi_str_factors_crys(Q, n = 0.1):
     ## 3D lattice of random emitters
     sc_numat = 10 # number of atoms in each dimension
     N = sc_numat ** 3 # total number of atoms
-    a0 = 1. # lattice constant, in angstrom
+    a0 = 2.*np.pi # lattice constant, in angstrom
     rndphases = 2.*np.pi*np.random.random_sample((N,))
 
     _xx = np.arange(sc_numat) * a0

@@ -18,7 +18,6 @@ for o, a in opts:
         filelist = np.load(a).astype(int)
     elif o == '-h':
         print "Options:"
-        print "-s [START NUM]: start saving from START NUM"
         print "-f [FILELIST]: read file list from file FILELIST"
         sys.exit(0)
 
