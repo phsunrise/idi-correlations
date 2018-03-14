@@ -1,7 +1,7 @@
 import os, sys, time
-import generate_filelist
+import generate_filelist_noncrys
 
-nprocs = generate_filelist.nprocs
+nprocs = generate_filelist_noncrys.nprocs
 
 for rank in range(nprocs):
     with open("job_%03d.sbatch"%rank, 'w') as f:
@@ -18,7 +18,7 @@ for rank in range(nprocs):
             f.write("#SBATCH --mail-type=END\n")
             f.write("#SBATCH --mail-user=phsun@stanford.edu\n")
         f.write("\n")
-        f.write("python exposures.py -f filelist_%03d.npy\n"%(rank))
+        f.write("python exposures_noncrys.py -f filelist_%03d.npy\n"%(rank))
 
     os.system("sbatch job_%03d.sbatch" % rank)
     time.sleep(1)

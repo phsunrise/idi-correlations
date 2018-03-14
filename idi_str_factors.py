@@ -7,9 +7,13 @@ output: fhkl, S(Q) of shape (ny, nx)
 Note that for IDI, Q is actually K (= k_out)
 '''
 
-def idi_str_factors_crys(Q):
+def idi_str_factors_crys(Q, n = 0.1):
+    '''
+    Q: Q vectors
+    n: number of fluorescent photons per atom
+    '''
     ## 3D lattice of random emitters
-    sc_numat = 20 # number of atoms in each dimension
+    sc_numat = 10 # number of atoms in each dimension
     N = sc_numat ** 3 # total number of atoms
     a0 = 1. # lattice constant, in angstrom
     rndphases = 2.*np.pi*np.random.random_sample((N,))
@@ -21,8 +25,11 @@ def idi_str_factors_crys(Q):
     rs = np.array(rs).reshape(3, N)
         # rs[0], rs[1], rs[2] are x,y,z coordinates of the atoms
 
+    ## fl: whether an atom fluoresces, with probability n
+    fl = np.random.random_sample((N,)) < n
+
     ## compute S(Q)
-    fhkl = np.sum(np.exp(1.j * (Q.dot(rs) + rndphases)), \
+    fhkl = np.sum(np.exp(1.j * (Q.dot(rs) + rndphases)) * fl, \
                   axis=2)
 
     return fhkl
