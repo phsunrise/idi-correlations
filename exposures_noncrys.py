@@ -18,6 +18,7 @@ for o, a in opts:
         filelist = np.load(a).astype(int)
     elif o == '-h':
         print "Options:"
+        print "-s [START NUM]: start saving from START NUM"
         print "-f [FILELIST]: read file list from file FILELIST"
         sys.exit(0)
 
@@ -56,9 +57,11 @@ for i_f in filelist:
     if i_f == 0:
         np.save(datadir + "Q.npy", Q)
     G2 = np.zeros((N_pix, N_pix))
+    I = np.zeros(Npix)
     for i_e in range(N0_e):
         fhkl = idi_str_factors_noncrys(K, dim = '2D')
         Ihkl_flat = np.abs(fhkl.reshape(N_pix, 1))**2
+        Ihkl_flat = np.random.poisson(Ihkl_flat)
 
         ### look at speckle pattern
         #plt.imshow(np.abs(fhkl)**2)
@@ -66,8 +69,10 @@ for i_f in filelist:
         #plt.show()
         #sys.exit(0)
 
+        I = I + Ihkl_flat.mean()
         G2 = G2 + Ihkl_flat.dot(Ihkl_flat.T)
 
     G2avg = 1.*G2 / N0_e
-    np.save(datadir + "G2_%04d.npy" % (i_f), G2avg)
-    print "done file %d" % (i_f)
+    Iavg = 1.*I / N0_e
+    np.save(datadir + "G2_%04d.npz" % (i_f), G2avg=G2avg, Iavg=Iavg)
+

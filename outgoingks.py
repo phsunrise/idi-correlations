@@ -45,3 +45,4 @@ def outgoingks(geometry):
     K[:,:,2] = k_0 * (D / Deno)
 
     return K
+

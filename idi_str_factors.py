@@ -1,8 +1,10 @@
 import numpy as np
+from settings import a0
 
 '''
 function to calculate S(Q)
-input: Q, a 3d array of shape (ny, nx, 3)
+input: Q, 3d array of shape (ny, nx, 3)
+       Omega, 2d array of shape (ny, nx)
 output: fhkl, S(Q) of shape (ny, nx)
 Note that for IDI, Q is actually K (= k_out)
 '''
@@ -15,7 +17,6 @@ def idi_str_factors_crys(Q, n = 0.1):
     ## 3D lattice of random emitters
     sc_numat = 10 # number of atoms in each dimension
     N = sc_numat ** 3 # total number of atoms
-    a0 = 2.*np.pi # lattice constant, in angstrom
     rndphases = 2.*np.pi*np.random.random_sample((N,))
 
     _xx = np.arange(sc_numat) * a0
